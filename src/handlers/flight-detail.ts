@@ -29,12 +29,14 @@ export default async function flightDetailHandler(req: Request, res: Response) {
   } catch (error) {
     if (error instanceof ZodError) {
       // Handle Zod validation errors
-      console.error('Zod validation error:', error.errors);
-      return res.status(400).json({ message: 'Bad Request', errors: error.errors });
+      console.error('Zod validation error:', error.errors)
+      return res
+        .status(400)
+        .json({ message: 'Bad Request', errors: error.errors })
     } else {
       // Handle other types of errors
-      console.error('Internal Server Error:', error);
-      return res.status(500).json({ message: 'Internal Server Error' });
+      console.error('Internal Server Error:', error)
+      return res.status(500).json({ message: 'Internal Server Error' })
     }
   }
 }
