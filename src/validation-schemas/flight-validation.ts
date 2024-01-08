@@ -1,10 +1,21 @@
-// validationSchemas/flightValidation.ts
-import { z, object, string, boolean } from 'zod'
+import { z, object, string, ZodType } from 'zod'
+
+const stringToNumberSchema = (def: number) =>
+  z.string().default(`${def}`).transform(Number)
+const safePreprocessor =
+  <O, Z extends ZodType<O>>(preprocessorSchema: Z) =>
+  (val: unknown): O | null => {
+    const parsed = preprocessorSchema.safeParse(val)
+    if (!parsed.success) {
+      return null
+    }
+    return parsed.data
+  }
 
 export const flightSummarySchema = object({
   cursor: z.optional(z.string()),
   pageSize: z.preprocess(
-    a => parseInt(z.string().parse(a), 10),
+    safePreprocessor(stringToNumberSchema(10)),
     z.number().optional(),
   ),
 })
